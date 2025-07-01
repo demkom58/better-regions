@@ -1,0 +1,27 @@
+name: BetterRegions
+version: '1.0'
+description: Modern WorldGuard extension with economy and advanced region management
+main: io.invokegs.betterregions.BetterRegionsPlugin
+api-version: '1.21'
+authors: [ demkom58, invokegs ]
+website: https://github.com/demkom58/better-regions
+depend: [WorldGuard]
+softdepend: [FastAsyncWorldEdit, Vault]
+
+permissions:
+  betterregions.admin:
+    description: Full admin access to BetterRegions
+    default: op
+  betterregions.economy.bypass:
+    description: Bypass economy costs for region operations
+    default: op
+  betterregions.limits.bypass:
+    description: Bypass block limits for regions
+    default: op
+
+commands:
+  betterregions:
+    description: Main BetterRegions admin command
+    aliases: [br, betterr]
+    usage: /<command> [version|reload|help]
+    permission: betterregions.admin

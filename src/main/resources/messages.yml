@@ -1,0 +1,118 @@
+# BetterRegions Messages
+# Uses MiniMessage format: https://docs.advntr.dev/minimessage/format.html
+
+# Plugin prefix shown before most messages
+prefix: "<gradient:#00ff88:#0088ff>[BetterRegions]</gradient> "
+
+# General messages
+no-permission: "<red>You don't have permission to use this command."
+plugin-reloaded: "<green>BetterRegions configuration reloaded successfully!"
+
+# Command usage messages
+commands:
+  claim-usage: "<red>Usage:</red> <gray>/rg claim <yellow><id></yellow>"
+  redefine-usage: "<red>Usage:</red> <gray>/rg redefine <yellow><id></yellow>"
+
+# Region validation messages
+regions:
+  invalid-name: "<red>✗ Invalid region name:</red> <yellow><region></yellow>"
+  already-exists: "<red>✗ A region with name '<yellow><region></yellow>' already exists."
+  not-exists: "<red>✗ Region '<yellow><region></yellow>' does not exist."
+  too-many: "<red>✗ You own too many regions!</red> <gray>Delete one before claiming a new one."
+  max-volume-config: "<red>✗ Maximum claim volume is configured incorrectly!</red> <gray>Contact an administrator."
+  too-large: "<red>✗ Region too large!</red> <gray>Current: <white><current></white>, Maximum: <white><max></white>"
+  overlaps: "<red>✗ This region overlaps with someone else's region!"
+  claim-only-inside-existing: "<red>✗ You may only claim regions inside existing regions that you own."
+  management-unavailable: "<red>✗ Region management is not available for this world."
+
+# Selection messages
+selection:
+  only-cuboid: "<red>✗ You can only use cuboid selections for regions.</red> <gray>Use WorldEdit's cuboid selection tool."
+  none: "<red>✗ Please make a selection first using WorldEdit.</red> <gray>Use <yellow>//wand</yellow> to get the selection tool."
+
+# Success messages
+success:
+  claim: "<green>✓ Successfully claimed region '<yellow><region></yellow>'."
+  redefine: "<green>✓ Successfully redefined region '<yellow><region></yellow>'."
+
+# Vertical expansion
+vertical-expansion-applied: "<green>✓ Region selection expanded to full world height."
+
+# Block limits
+limits:
+  region-too-small: "<red>✗ Region too small!</red> <gray>Current: <white><current_x>x<current_y>x<current_z></white>, Minimum: <white><min_x>x<min_y>x<min_z></white>"
+
+# Economy messages
+economy:
+  not-available: "<red>✗ Economy system unavailable!</red> <gray>Please contact an administrator."
+
+  insufficient-funds: "<red>✗ Insufficient funds!</red> <gray>Required: <yellow><required></yellow>, Balance: <green><balance></green>"
+
+  # Detailed insufficient funds message showing cost breakdown
+  insufficient-funds-detailed: |
+    
+    <dark_gray>------------------------
+    
+    <red><bold>✗ Insufficient Funds</bold></red>
+    
+    <dark_gray>┌─ <white><bold>Cost Breakdown</bold></white>
+    <dark_gray>├─ <gray>Horizontal (<white><horizontal_blocks></white> blocks): <yellow><horizontal_cost></yellow>
+    <dark_gray>├─ <gray>Vertical (<white><vertical_blocks></white> blocks): <yellow><vertical_cost></yellow>
+    <dark_gray>├─ <gray><bold>Total Required: <yellow><total_cost></yellow></bold>
+    <dark_gray>└─ <gray>Your Balance: <red><balance></red>
+    
+    <dark_gray>------------------------
+
+  # Payment failed after command succeeded (rare edge case)
+  payment-failed-after-command: |
+    <red><bold>⚠ Payment Processing Error</bold></red>
+    <gray>The region was created but payment failed!
+    <gray>Required: <yellow><required></yellow>, Balance: <red><balance></red>
+    <gray>Please contact an administrator immediately.
+
+  # Confirmation message with horizontal/vertical breakdown
+  confirmation-required: |
+    
+    <dark_gray>------------------------
+    
+    <yellow><bold>💰 Payment Confirmation Required</bold></yellow>
+    
+    <dark_gray>┌─ <white><bold>Cost Breakdown</bold></white>
+    <dark_gray>├─ <gray>Horizontal (<white><horizontal_blocks></white> new blocks): <green><horizontal_cost></green>
+    <dark_gray>├─<gray> Vertical (<white><vertical_blocks></white> new blocks): <green><vertical_cost></green>
+    <dark_gray>├─ <gray><bold>Total Cost: <green><total_cost></green></bold>
+    <dark_gray>└─ <gray>Your Balance: <green><balance></green>
+    
+    <gray><italic>Only charges for blocks not covered by existing regions!</italic>
+    
+    Click to confirm you decision:
+    <hover:show_text:'Buy new region'><click:run_command:'/rg confirm'><green><u>[Create]</u></green></click></hover> <hover:show_text:'Cancel operation'><click:run_command:'/rg cancel'><red><u>[Cancel]</u></red></click></hover>
+    
+    <dark_gray>------------------------
+
+  no-pending-action: "<red>✗ No pending actions to confirm."
+  action-cancelled: "<yellow>✗ Action cancelled."
+  selection-changed: "<red>✗ Selection changed!</red> <gray>Please repeat the command with your new selection."
+  selection-lost: "<red>✗ Selection lost!</red> <gray>Please make a new selection and repeat the command."
+
+  # Payment processed message
+  payment-processed: |
+    
+    <dark_gray>------------------------
+    
+    <green><bold>✓ Payment Processed Successfully</bold></green>
+    
+    <dark_gray>┌─ <white><bold>Payment Details</bold></white>
+    <dark_gray>├─ <gray>Horizontal cost: <green><horizontal_amount></green> (<white><horizontal_blocks></white> blocks)
+    <dark_gray>├─ <gray>Vertical cost: <green><vertical_amount></green> (<white><vertical_blocks></white> blocks)
+    <dark_gray>└─ <gray><bold>Total Paid: <green><total_amount></green></bold>
+    
+    <dark_gray>------------------------
+
+# Auto flags
+auto-flags:
+  applied: "<green>✓ Auto flags applied to region <yellow><region></yellow>."
+
+# Region protection
+protection:
+  command-restricted: "<red>✗ You cannot use this command in someone else's region."

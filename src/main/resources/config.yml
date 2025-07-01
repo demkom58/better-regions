@@ -1,0 +1,123 @@
+# BetterRegions Configuration
+# Modern WorldGuard extension with economy and advanced region management
+
+features:
+  # Automatic vertical expansion of region selections
+  vertical-expand:
+    enabled: false
+
+  # Block limits for region creation
+  #
+  # Also remember that WorldGuard has its own limits, this is just an additional layer,
+  # for example, max-claim-volume, max-region-count-per-player (-1 for unlimited)
+  block-limits:
+    # Minimum size for a region to be valid.
+    # Horizontal - both X and Z dimensions, vertical - Y dimension
+    # Prevents tiny regions that can be abused
+    min-horizontal: 20
+    min-vertical: 20
+
+  # Automatic flag setting on region creation
+  auto-flags:
+    show-messages: false
+
+    # Flags to automatically set on new regions
+    # Format: flag-name: value
+    flags:
+    # greeting: "Welcome to your region!"
+    # farewell: "Thanks for visiting!"
+    # pvp: "deny"
+    # mob-spawning: "deny"
+    # creeper-explosion: "deny"
+    # tnt: "deny"
+
+  # Enhanced region protection
+  #
+  # TIP:
+  # It is recommended to set "regions.protect-against-liquid-flow"
+  # to true in WorldGuard config.yml to prevent liquid flow into regions,
+  # so it will be impossible to grief regions by flowing water/lava
+  #
+  region-protection:
+    # Prevent fire spread between regions and from wilderness into regions
+    fire-spread: true
+
+    # Prevent block burning in regions
+    block-burn: true
+
+    # Changes how explosions work in regions. Here are the modes:
+    #
+    # UNTOUCHED - No explosion protection (default WorldGuard behavior)
+    #   • All explosions work normally
+    #
+    # ENTITY_DAMAGE_ONLY - Prevent block damage but allow entity damage
+    #   • TNT/creepers/withers damage players/mobs but don't destroy blocks
+    #   • Dispensers still spawn TNT but blocks are protected
+    #
+    # BUILDER_ONLY - Only users who can build in the region can cause explosions
+    #   • Player-lit TNT: works if lighter can build in region
+    #   • Dispenser TNT: works if dispenser placer can build in region
+    #   • Projectile-triggered TNT: inherits owner from projectile/shooter
+    #   • Explosion-chained TNT: inherits owner from triggering explosion
+    #   • Withers: work if spawner can build in region
+    #   • Wither skulls: inherit owner from launching wither
+    #   • Creepers: work if triggered by someone who can build
+    #   • Works for offline players (owner data stored on entities/blocks with PDC)
+    #
+    # MEMBER_ONLY - Only region owners/members can cause explosions
+    #   • Same as BUILDER_ONLY but checks region membership instead of build permission
+    #   • More restrictive than BUILDER_ONLY
+    #
+    # NO_EXPLOSIONS - No explosions at all in regions
+    #   • Blocks all explosion damage (blocks and entities)
+    #   • All explosion sources blocked regardless of ownership
+    #
+    # !!! IMPORTANT !!!
+    #    To make TNT explode in regions depending on an owner,
+    #    you should set tnt flag on global region: /rg flag __global__ tnt allow
+    #    otherwise blocks explosions in regions will not work
+    #
+    explosion-mode: BUILDER_ONLY
+
+    # Command restrictions in regions for players that can't build there
+    restrict-commands:
+      commands:
+        - "/setwarp"
+        - "/essentials:setwarp"
+        - "/tpa"
+        - "/tpahere"
+
+# Economy integration with separate horizontal and vertical pricing,
+# only charges for NEW blocks are not covered by existing regions.
+#
+# Values heavily depend on your server's economy and balance,
+# make sure to adjust them to fit your server's needs if you enable an economy.
+#
+# Note: replaces WorldGuard's claim, redefine, and define commands.
+economy:
+  enabled: false
+
+  # Horizontal pricing (base cost per ground-level block)
+  # This applies to the footprint area of the region
+  horizontal-price-per-block: 0.1
+
+  # Vertical pricing (cost per additional height layer)
+  # Much cheaper since it's just extending upward/downward
+  vertical-price-per-block: 0.00005
+
+  # Time players have to confirm buying a new region
+  confirmation-timeout-seconds: 120
+
+  # Permission-based pricing tiers
+  # Players get the BEST pricing from all permissions they have
+  # Format: permission-node: { horizontal: price, vertical: price }
+  price-permissions:
+    # betterregions.pricing.vip
+    vip:
+      horizontal: 0.09
+      vertical: 0.00004
+
+    # betterregions.pricing.premium
+    premium:
+      horizontal: 0.08
+      vertical: 0.00003
