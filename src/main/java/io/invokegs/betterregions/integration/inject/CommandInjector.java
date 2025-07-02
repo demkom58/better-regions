@@ -55,10 +55,7 @@ public final class CommandInjector {
                 return false;
             }
 
-            plugin.getLogger().info("Found " + regionCommands.size() + " WorldGuard region command instances");
-
             var templateCommand = regionCommands.values().iterator().next();
-
             CommandWrapper commandWrapper = wrapperFactory.apply(templateCommand);
             replaceAllCommands(knownCommands, regionCommands, commandWrapper);
 

@@ -23,5 +23,5 @@ commands:
   betterregions:
     description: Main BetterRegions admin command
     aliases: [br, betterr]
-    usage: /<command> [version|reload|help]
+    usage: /<command> [version|reload|help|update]
     permission: betterregions.admin

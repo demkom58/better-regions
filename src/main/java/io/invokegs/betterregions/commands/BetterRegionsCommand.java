@@ -2,8 +2,8 @@ package io.invokegs.betterregions.commands;
 
 import io.invokegs.betterregions.BetterRegionsPlugin;
 import io.invokegs.betterregions.config.Messages;
+import io.invokegs.betterregions.update.UpdateChecker;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -35,15 +35,17 @@ public final class BetterRegionsCommand implements CommandExecutor, TabCompleter
             .append(text("Modrinth: ").append(text("modrinth.com/project/better-regions")
                     .color(AQUA)
                     .decorate(TextDecoration.ITALIC, TextDecoration.UNDERLINED)
-                    .clickEvent(ClickEvent.openUrl("https://modrinth.com/project/better-regions")
+                    .clickEvent(ClickEvent.openUrl(UpdateChecker.PROJECT_URL)
                     )));
 
     private final BetterRegionsPlugin plugin;
     private final Messages messages;
+    private final UpdateChecker updateChecker;
 
-    public BetterRegionsCommand(BetterRegionsPlugin plugin, Messages messages) {
+    public BetterRegionsCommand(BetterRegionsPlugin plugin, Messages messages, UpdateChecker updateChecker) {
         this.plugin = plugin;
         this.messages = messages;
+        this.updateChecker = updateChecker;
     }
 
     @Override
@@ -55,6 +57,7 @@ public final class BetterRegionsCommand implements CommandExecutor, TabCompleter
         return switch (args[0].toLowerCase(Locale.ROOT)) {
             case "reload" -> handleReloadCommand(sender);
             case "help" -> handleHelpCommand(sender);
+            case "update" -> handleUpdateCommand(sender);
             default -> handleHelpCommand(sender);
         };
     }
@@ -63,7 +66,7 @@ public final class BetterRegionsCommand implements CommandExecutor, TabCompleter
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length <= 1) {
             var partial = args.length == 1 ? args[0].toLowerCase(Locale.ROOT) : "";
-            return Stream.of("reload", "info", "help", "version")
+            return Stream.of("reload", "info", "help", "version", "update")
                     .filter(sub -> sub.startsWith(partial))
                     .toList();
         }
@@ -88,12 +91,38 @@ public final class BetterRegionsCommand implements CommandExecutor, TabCompleter
         return true;
     }
 
+    private boolean handleUpdateCommand(CommandSender sender) {
+        if (!sender.hasPermission("betterregions.admin")) {
+            sender.sendMessage(messages.noPermission());
+            return true;
+        }
+
+        updateChecker.forceCheck().thenAccept(updateAvailable -> {
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                if (!updateAvailable) {
+                    sender.sendMessage("Last version of BetterRegions is used.");
+                    return;
+                }
+
+                updateChecker.notifySender(sender);
+            });
+        }).exceptionally(throwable -> {
+            plugin.getServer().getScheduler()
+                    .runTask(plugin, () -> sender.sendMessage(text("Failed to check for updates: "
+                            + throwable.getMessage()).color(RED)));
+            return null;
+        });
+
+        return true;
+    }
+
     private boolean handleHelpCommand(CommandSender sender) {
         sender.sendMessage(HELP_HEADER);
 
         sender.sendMessage(text("Commands:", YELLOW));
         var commands = List.of(
                 createCommandHelp("/betterregions reload", "Reload plugin configuration", "betterregions.admin"),
+                createCommandHelp("/betterregions update", "Check for plugin updates", "betterregions.admin"),
                 createCommandHelp("/betterregions help", "Show this help message"),
                 createCommandHelp("/rg claim <region>", "Claim a region with economy integration"),
                 createCommandHelp("/rg redefine <region>", "Redefine region boundaries"),

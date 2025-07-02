@@ -12,6 +12,9 @@ import io.invokegs.betterregions.integration.RegionCommandWrapper;
 import io.invokegs.betterregions.integration.inject.CommandInjector;
 import io.invokegs.betterregions.integration.VaultIntegration;
 import io.invokegs.betterregions.integration.WorldGuardIntegration;
+import io.invokegs.betterregions.update.UpdateChecker;
+import io.invokegs.betterregions.update.UpdateNotificationListener;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -23,6 +26,7 @@ public final class BetterRegionsPlugin extends JavaPlugin {
     private final WorldGuardIntegration worldGuardIntegration = new WorldGuardIntegration();
     private final VaultIntegration vaultIntegration = new VaultIntegration(this);
     private final EconomyService economyService = new EconomyService(vaultIntegration, configuration, messages, this);
+    private final UpdateChecker updateChecker = new UpdateChecker(this);
 
     private final VerticalExpandFeature verticalExpandFeature
             = new VerticalExpandFeature(configuration, messages);
@@ -48,6 +52,7 @@ public final class BetterRegionsPlugin extends JavaPlugin {
 
             registerListeners();
             registerCommands();
+            setupUpdateChecker();
 
             getLogger().info("BetterRegions enabled successfully!");
         } catch (Exception e) {
@@ -90,14 +95,28 @@ public final class BetterRegionsPlugin extends JavaPlugin {
 
     private void registerListeners() {
         regionProtectFeature.enable();
+
+        if (configuration.isCheckUpdatesEnabled()) {
+            var updateListener = new UpdateNotificationListener(this, updateChecker, configuration);
+            getServer().getPluginManager().registerEvents(updateListener, this);
+        }
     }
 
     private void registerCommands() {
         var adminCommand = getCommand("betterregions");
         if (adminCommand != null) {
-            var executor = new BetterRegionsCommand(this, messages);
+            var executor = new BetterRegionsCommand(this, messages, updateChecker);
             adminCommand.setExecutor(executor);
             adminCommand.setTabCompleter(executor);
+        }
+    }
+
+    private void setupUpdateChecker() {
+        if (configuration.isCheckUpdatesEnabled()) {
+            updateChecker.checkForUpdates(true).exceptionally(throwable -> {
+                getLogger().log(Level.WARNING, "Failed to check for updates on startup", throwable);
+                return null;
+            });
         }
     }
 
@@ -116,5 +135,9 @@ public final class BetterRegionsPlugin extends JavaPlugin {
 
     public EconomyService economy() {
         return economyService;
+    }
+
+    public UpdateChecker updateChecker() {
+        return updateChecker;
     }
 }

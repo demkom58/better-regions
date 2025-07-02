@@ -65,6 +65,7 @@ public final class Configuration {
     private boolean blockBurnProtection;
     private ExplosionMode explosionMode;
     private Set<String> restrictedCommands = new HashSet<>();
+    private boolean checkUpdates;
 
     public Configuration(Plugin plugin) {
         this.plugin = plugin;
@@ -103,6 +104,7 @@ public final class Configuration {
         loadEconomySettings();
         loadAutoFlagSettings();
         loadRegionProtectionSettings();
+        loadUpdateSettings();
     }
 
     private void loadVerticalExpandSettings() {
@@ -193,11 +195,19 @@ public final class Configuration {
         this.restrictedCommands = new HashSet<>(commands);
     }
 
+    private void loadUpdateSettings() {
+        this.checkUpdates = config.getBoolean("check-updates", true);
+    }
+
     private void setDefaultProtectionSettings() {
         this.fireSpreadProtection = false;
         this.blockBurnProtection = false;
         this.explosionMode = ExplosionMode.UNTOUCHED;
         this.restrictedCommands = new HashSet<>();
+    }
+
+    private void setDefaultUpdateSettings() {
+        this.checkUpdates = true;
     }
 
     private void setDefaults() {
@@ -206,6 +216,7 @@ public final class Configuration {
         this.defaultHorizontalPricePerBlock = 0.1;
         this.defaultVerticalPricePerBlock = 0.00005;
         setDefaultProtectionSettings();
+        setDefaultUpdateSettings();
     }
 
     private BigInteger getBigInteger(ConfigurationSection section, String key, BigInteger defaultValue) {
@@ -233,4 +244,6 @@ public final class Configuration {
     public boolean isBlockBurnProtection() { return blockBurnProtection; }
     public ExplosionMode getExplosionMode() { return explosionMode; }
     public Set<String> getRestrictedCommands() { return Set.copyOf(restrictedCommands); }
+
+    public boolean isCheckUpdatesEnabled() { return checkUpdates; }
 }

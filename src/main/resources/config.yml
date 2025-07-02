@@ -1,6 +1,9 @@
 # BetterRegions Configuration
 # Modern WorldGuard extension with economy and advanced region management
 
+# Checks Modrinth for new plugin versions
+check-updates: true
+
 features:
   # Automatic vertical expansion of region selections
   vertical-expand:
