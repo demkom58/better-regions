@@ -14,7 +14,6 @@ import io.invokegs.betterregions.integration.VaultIntegration;
 import io.invokegs.betterregions.integration.WorldGuardIntegration;
 import io.invokegs.betterregions.update.UpdateChecker;
 import io.invokegs.betterregions.update.UpdateNotificationListener;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
