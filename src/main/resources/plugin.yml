@@ -1,5 +1,5 @@
 name: BetterRegions
-version: '1.0'
+version: '1.1'
 description: Modern WorldGuard extension with economy and advanced region management
 main: io.invokegs.betterregions.BetterRegionsPlugin
 api-version: '1.21'
