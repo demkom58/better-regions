@@ -180,14 +180,12 @@ public final class RegionCommandWrapper extends CommandWrapper {
         switch (result) {
             case EconomyService.ProcessResult.Allow() -> {
                 var command = pendingAction.command();
-                var args = new String[pendingAction.args().length + 1];
-                args[0] = command;
-                System.arraycopy(pendingAction.args(), 0, args, 1, pendingAction.args().length);
+                var originalArgs = pendingAction.args();
 
                 if ("claim".equals(command)) {
-                    performClaim(player, args);
+                    performClaim(player, originalArgs);
                 } else if ("redefine".equals(command)) {
-                    performRedefine(player, args);
+                    performRedefine(player, originalArgs);
                 }
             }
             case EconomyService.ProcessResult.Deny(var reason) -> player.sendMessage(reason);
